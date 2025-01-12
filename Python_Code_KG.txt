@@ -1,0 +1,38 @@
+import matplotlib.pylab as plt
+from operator import itemgetter
+
+gender = 'f'
+
+def readcsv():
+    csv = []
+    with open('persons.csv') as file:
+        for pos, line in enumerate(file):
+            if pos > 1:
+                csv.append(line.split(';'))
+    return csv
+
+def extractnames(data, gender):
+    names = []
+    for line in data:
+        if line[2] != '' and line[1] == gender:
+            names.append(line[2])
+    names.sort()
+    return names
+
+def countnames(data):
+    result = dict((i,data.count(i)) for i in data)
+    return result
+
+def sortdict(data):
+    return dict(sorted(data.items(), key=itemgetter(1), reverse=True)[:10])
+
+def plotdata(data):
+    n, c = zip(*data.items())
+    plt.bar(n, c)
+    plt.show()
+
+data = readcsv()
+names = extractnames(data, gender)
+countednames = countnames(names)
+sorteddict = sortdict(countednames)
+plotdata(sorteddict)
